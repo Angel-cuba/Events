@@ -2,16 +2,15 @@ import { Alert, FlatList, Pressable, StyleSheet, TouchableOpacity } from 'react-
 import { Agenda, AgendaEntry, AgendaSchedule, DateData } from 'react-native-calendars';
 import { View, Text } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
-import events from '../assets/data/events.json'
+import events from '../assets/data/events.json';
 import { useState } from 'react';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
   const [items, setItems] = useState<AgendaSchedule>({});
 
-
-const renderEachItem = (reservation: AgendaEntry, isFirst: boolean) => {
+  const renderEachItem = (reservation: AgendaEntry, isFirst: boolean) => {
     const fontSize = isFirst ? 16 : 14;
-    const color = isFirst ? "black" : "#43515c";
+    const color = isFirst ? 'black' : '#43515c';
 
     return (
       <TouchableOpacity
@@ -27,7 +26,7 @@ const renderEachItem = (reservation: AgendaEntry, isFirst: boolean) => {
     setItems(events);
   };
 
-   const renderEmptyDate = () => {
+  const renderEmptyDate = () => {
     return (
       <View style={styles.emptyDate}>
         <Text>This is empty date!</Text>
@@ -36,7 +35,12 @@ const renderEachItem = (reservation: AgendaEntry, isFirst: boolean) => {
   };
   return (
     <View style={styles.container}>
-      <Agenda items={events} renderItem={renderEachItem} renderEmptyDate={renderEmptyDate}/>
+      <Agenda
+        items={events}
+        renderItem={renderEachItem}
+        renderEmptyDate={renderEmptyDate}
+        showOnlySelectedDayItems
+      />
     </View>
   );
 }
@@ -45,8 +49,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-   item: {
-    backgroundColor: "white",
+  item: {
+    backgroundColor: 'white',
     flex: 1,
     borderRadius: 5,
     padding: 10,
@@ -54,9 +58,12 @@ const styles = StyleSheet.create({
     marginTop: 17,
   },
   emptyDate: {
-    height: 15,
+    height: 5,
     flex: 1,
     paddingTop: 30,
+    paddingLeft: 10,
+    marginTop: 10,
+    borderRadius: 5,
+    marginHorizontal: 3
   },
-
 });
