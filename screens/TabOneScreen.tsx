@@ -36,7 +36,7 @@ const renderEachItem = (reservation: AgendaEntry, isFirst: boolean) => {
   };
   return (
     <View style={styles.container}>
-      <Agenda items={events} renderItem={renderEachItem} />
+      <Agenda items={events} renderItem={renderEachItem} renderEmptyDate={renderEmptyDate}/>
     </View>
   );
 }
