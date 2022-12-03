@@ -11,6 +11,8 @@ export default function ModalScreen() {
     console.warn('Join');
   };
 
+  const displayedUsers = users.slice(0, 7);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{event.name}</Text>
@@ -22,9 +24,18 @@ export default function ModalScreen() {
       <View style={styles.footer}>
         {/*  User avatars */}
         <View style={styles.user}>
-          {users.map((user) => (
-            <Image style={styles.avatar} source={{ uri: user.avatarUrl }} />
+          {displayedUsers.map((user, index) => (
+            <Image
+              key={user.id}
+              style={[styles.avatar, { transform: [{ translateX: -20 * index }] }]}
+              source={{ uri: user.avatarUrl }}
+            />
           ))}
+          <View
+            style={[styles.avatar, { transform: [{ translateX: -18 * displayedUsers.length }] }]}
+          >
+            <Text>+{users.length - displayedUsers.length}</Text>
+          </View>
         </View>
         <CustomButton text="Join" onPress={onJoin} />
       </View>
@@ -62,5 +73,11 @@ const styles = StyleSheet.create({
     width: 50,
     aspectRatio: 1,
     borderRadius: 25,
-  }
+    marginRight: 3,
+    borderWidth: 2,
+    borderColor: '#f0f0f0',
+    backgroundColor: '#b6b2b261',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
