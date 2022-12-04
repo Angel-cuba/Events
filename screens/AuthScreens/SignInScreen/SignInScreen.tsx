@@ -25,7 +25,7 @@ const SignInScreen = () => {
 
   const { signInEmailPassword, isLoading } = useSignInEmailPassword();
 
-  const onSignInPressed = async (data) => {
+  const onSignInPressed = async (data : any) => {
     if (isLoading) {
       return;
     }
