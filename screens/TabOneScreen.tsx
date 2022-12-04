@@ -15,7 +15,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     return (
       <TouchableOpacity
         style={[styles.item, { height: reservation.height }]}
-        onPress={() => Alert.alert(reservation.name)}
+        onPress={() => navigation.navigate('Modal', { id: reservation.id })}
       >
         <Text style={{ fontSize, color }}>{reservation.name}</Text>
       </TouchableOpacity>

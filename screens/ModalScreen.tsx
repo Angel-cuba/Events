@@ -6,7 +6,9 @@ import users from '../assets/data/users.json';
 import { AntDesign } from '@expo/vector-icons';
 import CustomButton from '../components/CustomButton';
 
-export default function ModalScreen() {
+export default function ModalScreen({ route } : any) {
+  const { id } = route?.params;
+  console.log(id);
   const onJoin = () => {
     console.warn('Join');
   };
