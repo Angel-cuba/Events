@@ -23,11 +23,16 @@ import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../typ
 import LinkingConfiguration from './LinkingConfiguration';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <RootNavigator />
+      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+    >
+      {
+        isAuthenticated ? <RootNavigator /> : <OutNavigator />
+      }
     </NavigationContainer>
   );
 }
@@ -39,16 +44,6 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
-
-  const isAutehnticated = false;
-
-  if(!isAutehnticated) {
-    <Stack.Navigator>
-      <Stack.Screen name="SignIn" component={SignInScreen} options={{headerShown: false}}/>
-      <Stack.Screen name="SignUp" component={SignUpScreen} options={{headerShown: false}}/>
-
-    </Stack.Navigator>
-  }
   return (
     <Stack.Navigator>
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
@@ -56,8 +51,16 @@ function RootNavigator() {
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
         <Stack.Screen name="Users" component={UsersScreen} />
-
       </Stack.Group>
+    </Stack.Navigator>
+  );
+}
+
+function OutNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="SignIn" component={SignInScreen} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} />
     </Stack.Navigator>
   );
 }
@@ -76,7 +79,8 @@ function BottomTabNavigator() {
       initialRouteName="TabOne"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
-      }}>
+      }}
+    >
       <BottomTab.Screen
         name="TabOne"
         component={TabOneScreen}
@@ -88,13 +92,9 @@ function BottomTabNavigator() {
               onPress={() => navigation.navigate('Users')}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
-              })}>
-              <FontAwesome
-                name="users"
-                size={25}
-                color={"#343434d8"}
-                style={{ marginRight: 15 }}
-              />
+              })}
+            >
+              <FontAwesome name="users" size={25} color={'#343434d8'} style={{ marginRight: 15 }} />
             </Pressable>
           ),
         })}
