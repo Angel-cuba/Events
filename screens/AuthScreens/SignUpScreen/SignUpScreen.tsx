@@ -17,7 +17,7 @@ const SignUpScreen = () => {
 
   const { signUpEmailPassword, isLoading } = useSignUpEmailPassword();
 
-  const onRegisterPressed = async (data) => {
+  const onRegisterPressed = async (data: any) => {
     if (isLoading) {
       return;
     }
@@ -34,7 +34,7 @@ const SignUpScreen = () => {
     }
 
     if (needsEmailVerification) {
-      Alert.alert("Verify you email", "Check your email and follow the link");
+      Alert.alert("Verify your email", "Check your email and follow the link");
     }
 
     if (isSuccess) {
@@ -104,7 +104,7 @@ const SignUpScreen = () => {
           placeholder="Repeat Password"
           secureTextEntry
           rules={{
-            validate: (value) => value === pwd || "Password do not match",
+            validate: (value: any) => value === pwd || "Password do not match",
           }}
         />
 
