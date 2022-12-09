@@ -22,7 +22,7 @@ const SignUpScreen = () => {
       return;
     }
     const { name, email, password } = data;
-    // sign up
+
     const { error, isSuccess, needsEmailVerification } =
       await signUpEmailPassword(email, password, {
         displayName: name.trim(),
