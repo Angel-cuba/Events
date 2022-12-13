@@ -13,7 +13,6 @@ export default function TabTwoScreen() {
     <View style={styles.container}>
       <Image source={{ uri: user?.avatarUrl.slice(-5) !== 'blank' ? user?.avatarUrl : 'https://res.cloudinary.com/dqaerysgb/image/upload/v1648218398/istockphoto-1132926013-612x612_t1xwec.jpg' }} style={styles.avatar} />
       <Text style={styles.name}>{user?.displayName}</Text>
-      <Text>{user?.avatarUrl.slice(-5)}</Text>
       <View style={{ marginTop: 'auto' }}>
         <CustomButton
           onPress={signOut}
