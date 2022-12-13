@@ -5,15 +5,24 @@ import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
 
-import { NhostClient, NhostReactProvider } from '@nhost/react';
+import { NhostClient, NhostReactProvider } from '@nhost/react';
 import * as SecureStore from 'expo-secure-store';
+
+import { NhostApolloProvider } from '@nhost/react-apollo';
+
+type nhostClientType = {
+  subdomain: string;
+  region: string;
+  clientStorageType: string;
+  clientStorage: any;
+};
 
 const nhostClient = new NhostClient({
   subdomain: 'tdupeisrevdqinaswdck',
   region: 'eu-central-1',
   clientStorageType: 'expo-secure-storage',
   clientStorage: SecureStore,
-})
+});
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -25,7 +34,9 @@ export default function App() {
     return (
       <SafeAreaProvider>
         <NhostReactProvider nhost={nhostClient}>
-        <Navigation colorScheme={colorScheme} />
+          <NhostApolloProvider nhost={nhostClient as nhostClientType | any}>
+            <Navigation colorScheme={colorScheme} />
+          </NhostApolloProvider>
         </NhostReactProvider>
         <StatusBar />
       </SafeAreaProvider>
