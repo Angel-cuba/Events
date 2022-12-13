@@ -38,7 +38,7 @@ const SignUpScreen = () => {
     }
 
     if (isSuccess) {
-      navigation.navigate("SignIn");
+      navigation.navigate("SignIn", { email } as any);
     }
   };
 
