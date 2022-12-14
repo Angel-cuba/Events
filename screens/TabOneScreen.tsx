@@ -2,22 +2,12 @@ import { ActivityIndicator, Alert, FlatList, Pressable, StyleSheet, TouchableOpa
 import { Agenda, AgendaEntry, AgendaSchedule, DateData } from 'react-native-calendars';
 import { View, Text } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
-import events from '../assets/data/events.json';
 import { useState } from 'react';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
+import { getEvents } from './graphQueries/queries';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
   const [items, setItems] = useState<AgendaSchedule>({});
-
-  const getEventsQuery = gql`
-    query {
-      Events {
-        id
-        name
-        date
-      }
-    }
-  `;
 
   const getEventsSchedule = (events: []): AgendaSchedule => {
   const items: AgendaSchedule = {};
@@ -33,7 +23,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
   return items;
 };
-  const { data, loading, error } = useQuery(getEventsQuery);
+  const { data, loading, error } = useQuery(getEvents);
 
   const events = data && getEventsSchedule(data.Events);
 
@@ -44,7 +34,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     return (
       <TouchableOpacity
         style={[styles.item, { height: reservation.height }]}
-        onPress={() => navigation.navigate('Modal', { id: reservation.name })}
+        onPress={() => navigation.navigate('Modal', { id: reservation.id })}
       >
         <Text style={{ fontSize, color }}>{reservation.name}</Text>
       </TouchableOpacity>
