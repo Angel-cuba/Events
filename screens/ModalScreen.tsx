@@ -1,19 +1,31 @@
 import { StatusBar } from 'expo-status-bar';
-import { ActivityIndicator, Image, Platform, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, Alert, Image, Platform, StyleSheet, Text } from 'react-native';
 import { View } from '../components/Themed';
 import users from '../assets/data/users.json';
 import { AntDesign } from '@expo/vector-icons';
 import CustomButton from '../components/CustomButton';
-import { useQuery } from '@apollo/client';
-import { getEvent } from './graphQueries/queries';
+import { useQuery, useMutation } from '@apollo/client';
+import { getEvent, JoinEvent } from './graphQueries/queries';
+import { useUserId } from '@nhost/react'
 
 export default function ModalScreen({ route }: any) {
   const id = route?.params?.id;
-  const onJoin = () => {};
+  const userId  = useUserId();
+  const onJoin = async () => {
+    try {
+      await justJoinEvent({ variables: { userId, eventId: id } });
+    } catch (error: any) {
+      Alert.alert('Error', 'Something went wrong', error?.message  )
+    }
+  };
 
   const { data, loading, error } = useQuery(getEvent, { variables: { id } });
 
   const event = data?.Events_by_pk;
+
+  const [justJoinEvent] = useMutation(JoinEvent);
+
+
   if (error) {
     return (
       <View>
