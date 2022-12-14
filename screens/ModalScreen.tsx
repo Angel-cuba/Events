@@ -1,17 +1,32 @@
 import { StatusBar } from 'expo-status-bar';
-import { Image, Platform, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, Image, Platform, StyleSheet, Text } from 'react-native';
 import { View } from '../components/Themed';
-import event from '../assets/data/event.json';
 import users from '../assets/data/users.json';
 import { AntDesign } from '@expo/vector-icons';
 import CustomButton from '../components/CustomButton';
+import { useQuery } from '@apollo/client';
+import { getEvent } from './graphQueries/queries';
 
-export default function ModalScreen({ route } : any) {
-  const { id } = route?.params;
-  console.log(id);
-  const onJoin = () => {
-    console.warn('Join');
-  };
+export default function ModalScreen({ route }: any) {
+  const id = route?.params?.id;
+  const onJoin = () => {};
+
+  const { data, loading, error } = useQuery(getEvent, { variables: { id } });
+
+  const event = data?.Events_by_pk;
+  if (error) {
+    return (
+      <View>
+        <Text style={styles.title}>Something went wrong.</Text>
+        <Text style={styles.time}>Please try again later!!!</Text>
+        <Text>{error.message}</Text>
+      </View>
+    );
+  }
+
+  if (loading) {
+    return <ActivityIndicator />;
+  }
 
   const displayedUsers = users.slice(0, 7);
 
