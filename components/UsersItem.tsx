@@ -8,7 +8,7 @@ type UserItemProps = {
 const UserItem = ({ user }: UserItemProps) => {
   return (
     <View style={styles.container}>
-      <Image source={{ uri: user.avatarUrl }} style={styles.image} />
+      <Image source={{ uri: user.avatarUrl.slice(-5) === 'blank' ? 'https://res.cloudinary.com/dqaerysgb/image/upload/v1651333819/Earth-Planet-PNG-Picture_btbdtv.png' : user.avatarUrl }} style={styles.image} />
       <Text style={styles.name}>{user.displayName}</Text>
     </View>
   );
