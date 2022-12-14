@@ -1,12 +1,41 @@
-import { Alert, FlatList, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, Pressable, StyleSheet, TouchableOpacity } from 'react-native';
 import { Agenda, AgendaEntry, AgendaSchedule, DateData } from 'react-native-calendars';
 import { View, Text } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import events from '../assets/data/events.json';
 import { useState } from 'react';
+import { gql, useQuery } from '@apollo/client';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
   const [items, setItems] = useState<AgendaSchedule>({});
+
+  const getEventsQuery = gql`
+    query {
+      Events {
+        id
+        name
+        date
+      }
+    }
+  `;
+
+  const getEventsSchedule = (events: []): AgendaSchedule => {
+  const items: AgendaSchedule = {};
+
+  events.forEach((event: any) => {
+    const day = event.date.slice(0, 10)
+
+    if (!items[day]) {
+      items[day] = [];
+    }
+    items[day].push({ ...event as any, day, height: 50 });
+  });
+
+  return items;
+};
+  const { data, loading, error } = useQuery(getEventsQuery);
+
+  const events = getEventsSchedule(data.Events);
 
   const renderEachItem = (reservation: AgendaEntry, isFirst: boolean) => {
     const fontSize = isFirst ? 16 : 14;
@@ -15,7 +44,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     return (
       <TouchableOpacity
         style={[styles.item, { height: reservation.height }]}
-        onPress={() => navigation.navigate('Modal', { id: reservation.id })}
+        onPress={() => navigation.navigate('Modal', { id: reservation.name })}
       >
         <Text style={{ fontSize, color }}>{reservation.name}</Text>
       </TouchableOpacity>
@@ -33,6 +62,14 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
       </View>
     );
   };
+
+  if(loading) {
+    return <ActivityIndicator />;
+  }
+  if(error) {
+      Alert.alert('Error', 'Something went wrong', error.message as any)
+  }
+
   return (
     <View style={styles.container}>
       <Agenda
@@ -64,6 +101,6 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     marginTop: 10,
     borderRadius: 5,
-    marginHorizontal: 3
+    marginHorizontal: 3,
   },
 });
