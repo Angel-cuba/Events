@@ -35,7 +35,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 };
   const { data, loading, error } = useQuery(getEventsQuery);
 
-  const events = getEventsSchedule(data.Events);
+  const events = data && getEventsSchedule(data.Events);
 
   const renderEachItem = (reservation: AgendaEntry, isFirst: boolean) => {
     const fontSize = isFirst ? 16 : 14;
