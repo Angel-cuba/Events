@@ -25,6 +25,8 @@ export default function ModalScreen({ route }: any) {
 
   const [justJoinEvent] = useMutation(JoinEvent);
 
+  const joined = event?.EventObserver?.some((observer: any) => observer.user.id === userId);
+
   if (error) {
     return (
       <View>
@@ -54,25 +56,29 @@ export default function ModalScreen({ route }: any) {
       <View style={styles.footer}>
         {/*  User avatars */}
         <View style={styles.user}>
-          {event && displayedUsers.map((user: any, index: number) => (
-            <Image
-              key={user?.id}
-              style={[styles.avatar, { transform: [{ translateX: -20 * index }] }]}
-              source={{
-                uri:
-                  user?.avatarUrl.slice(-5) !== 'blank'
-                    ? user?.avatarUrl
-                    : 'https://res.cloudinary.com/dqaerysgb/image/upload/v1648218398/istockphoto-1132926013-612x612_t1xwec.jpg',
-              }}
-            />
-          ))}
+          {event &&
+            displayedUsers.map((user: any, index: number) => (
+              <Image
+                key={user?.id}
+                style={[styles.avatar, { transform: [{ translateX: -20 * index }] }]}
+                source={{
+                  uri:
+                    user?.avatarUrl.slice(-5) !== 'blank'
+                      ? user?.avatarUrl
+                      : 'https://res.cloudinary.com/dqaerysgb/image/upload/v1648218398/istockphoto-1132926013-612x612_t1xwec.jpg',
+                }}
+              />
+            ))}
           <View
             style={[styles.avatar, { transform: [{ translateX: -18 * displayedUsers.length }] }]}
           >
             <Text>+{event?.EventObserver.length - displayedUsers.length}</Text>
           </View>
         </View>
-        <CustomButton text="Join" onPress={onJoin} />
+        {
+          // Join button
+          !joined ? <CustomButton text="Join" onPress={onJoin} /> : null
+        }
       </View>
 
       {/* Use a light status bar on iOS to account for the black space above the modal */}
