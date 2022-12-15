@@ -6,16 +6,16 @@ import { AntDesign } from '@expo/vector-icons';
 import CustomButton from '../components/CustomButton';
 import { useQuery, useMutation } from '@apollo/client';
 import { getEvent, JoinEvent } from './graphQueries/queries';
-import { useUserId } from '@nhost/react'
+import { useUserId } from '@nhost/react';
 
 export default function ModalScreen({ route }: any) {
   const id = route?.params?.id;
-  const userId  = useUserId();
+  const userId = useUserId();
   const onJoin = async () => {
     try {
       await justJoinEvent({ variables: { userId, eventId: id } });
     } catch (error: any) {
-      Alert.alert('Error', 'Something went wrong', error?.message  )
+      Alert.alert('Error', 'Something went wrong', error?.message);
     }
   };
 
@@ -24,7 +24,6 @@ export default function ModalScreen({ route }: any) {
   const event = data?.Events_by_pk;
 
   const [justJoinEvent] = useMutation(JoinEvent);
-
 
   if (error) {
     return (
@@ -40,7 +39,9 @@ export default function ModalScreen({ route }: any) {
     return <ActivityIndicator />;
   }
 
-  const displayedUsers = users.slice(0, 7);
+  const displayedUsers = (event?.EventObserver || [])
+    .slice(0, 7)
+    .map((observer: any) => observer.user);
 
   return (
     <View style={styles.container}>
@@ -53,17 +54,22 @@ export default function ModalScreen({ route }: any) {
       <View style={styles.footer}>
         {/*  User avatars */}
         <View style={styles.user}>
-          {displayedUsers.map((user, index) => (
+          {event && displayedUsers.map((user: any, index: number) => (
             <Image
-              key={user.id}
+              key={user?.id}
               style={[styles.avatar, { transform: [{ translateX: -20 * index }] }]}
-              source={{ uri: user.avatarUrl }}
+              source={{
+                uri:
+                  user?.avatarUrl.slice(-5) !== 'blank'
+                    ? user?.avatarUrl
+                    : 'https://res.cloudinary.com/dqaerysgb/image/upload/v1648218398/istockphoto-1132926013-612x612_t1xwec.jpg',
+              }}
             />
           ))}
           <View
             style={[styles.avatar, { transform: [{ translateX: -18 * displayedUsers.length }] }]}
           >
-            <Text>+{users.length - displayedUsers.length}</Text>
+            <Text>+{event?.EventObserver.length - displayedUsers.length}</Text>
           </View>
         </View>
         <CustomButton text="Join" onPress={onJoin} />
