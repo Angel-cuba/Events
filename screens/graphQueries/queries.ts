@@ -6,6 +6,13 @@ export const getEvent = gql`
       id
       name
       date
+          EventObserver {
+          user {
+            id
+            displayName
+            avatarUrl
+            }
+          }
       }
       }
       `
